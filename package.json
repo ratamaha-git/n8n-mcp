@@ -1,0 +1,54 @@
+{
+  "name": "@automatelab/n8n-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Cursor with three n8n tools: scaffold node, generate workflow, lint workflow.",
+  "type": "module",
+  "bin": {
+    "n8n-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "smoke": "node ./dist/index.js --smoke",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "n8n",
+    "mcp",
+    "cursor",
+    "model-context-protocol",
+    "workflow-automation"
+  ],
+  "homepage": "https://github.com/ratamaha-git/n8n-mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ratamaha-git/n8n-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ratamaha-git/n8n-mcp/issues"
+  },
+  "author": "AutomateLab <hello@automatelab.tech>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist/",
+    "examples/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

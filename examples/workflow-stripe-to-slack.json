@@ -1,0 +1,97 @@
+{
+  "name": "Stripe webhook to Slack and Google Sheets",
+  "nodes": [
+    {
+      "id": "5b4f0a1c-1234-4ec6-9001-aaaaaaaaaaaa",
+      "name": "Stripe Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "stripe-events",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "5b4f0a1c-1234-4ec6-9001-bbbbbbbbbbbb",
+      "name": "Filter Charge Succeeded",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 300],
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond-1",
+              "leftValue": "={{ $json.body.type }}",
+              "rightValue": "charge.succeeded",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "5b4f0a1c-1234-4ec6-9001-cccccccccccc",
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [700, 200],
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": { "__rl": true, "mode": "name", "value": "billing" },
+        "text": "=New Stripe charge: ${{ $json.body.data.object.amount / 100 }} from {{ $json.body.data.object.billing_details.email }}",
+        "otherOptions": {}
+      }
+    },
+    {
+      "id": "5b4f0a1c-1234-4ec6-9001-dddddddddddd",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [700, 420],
+      "parameters": {
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": { "__rl": true, "mode": "list", "value": "" },
+        "sheetName": { "__rl": true, "mode": "list", "value": "Charges" },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.data.object.id }}",
+            "amount": "={{ $json.body.data.object.amount / 100 }}",
+            "currency": "={{ $json.body.data.object.currency }}",
+            "email": "={{ $json.body.data.object.billing_details.email }}",
+            "created_at": "={{ $now }}"
+          },
+          "matchingColumns": ["id"]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Stripe Webhook": {
+      "main": [
+        [{ "node": "Filter Charge Succeeded", "type": "main", "index": 0 }]
+      ]
+    },
+    "Filter Charge Succeeded": {
+      "main": [
+        [
+          { "node": "Slack", "type": "main", "index": 0 },
+          { "node": "Google Sheets", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}

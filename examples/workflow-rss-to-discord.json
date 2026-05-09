@@ -1,0 +1,63 @@
+{
+  "name": "RSS feed to Discord channel",
+  "nodes": [
+    {
+      "id": "9c2d4e3a-7777-4ec6-9002-aaaaaaaaaaaa",
+      "name": "RSS Feed Trigger",
+      "type": "n8n-nodes-base.rssFeedReadTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "parameters": {
+        "feedUrl": "https://news.ycombinator.com/rss",
+        "pollTimes": { "item": [{ "mode": "everyHour" }] }
+      }
+    },
+    {
+      "id": "9c2d4e3a-7777-4ec6-9002-bbbbbbbbbbbb",
+      "name": "Format Message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "asn-1",
+              "name": "content",
+              "value": "=*{{ $json.title }}*\n{{ $json.link }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "9c2d4e3a-7777-4ec6-9002-cccccccccccc",
+      "name": "Discord",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "content": "={{ $json.content }}"
+      }
+    }
+  ],
+  "connections": {
+    "RSS Feed Trigger": {
+      "main": [
+        [{ "node": "Format Message", "type": "main", "index": 0 }]
+      ]
+    },
+    "Format Message": {
+      "main": [
+        [{ "node": "Discord", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}
