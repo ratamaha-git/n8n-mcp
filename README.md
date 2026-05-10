@@ -98,3 +98,7 @@ npm run smoke
 ## License
 
 MIT. See [LICENSE](./LICENSE).
+
+---
+
+Developed by [AutomateLab](https://automatelab.tech).
