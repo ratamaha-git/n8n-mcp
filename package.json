@@ -1,6 +1,7 @@
 {
   "name": "@automatelab/n8n-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
+  "mcpName": "io.github.ratamaha-git/n8n-mcp",
   "description": "MCP server for Cursor with three n8n tools: scaffold node, generate workflow, lint workflow.",
   "type": "module",
   "bin": {
