@@ -9,6 +9,13 @@ compatibility:
     - claude-code
     - cursor
     - claude-desktop
+    - windsurf
+    - vscode
+    - zed
+    - continue
+    - cline
+    - jetbrains
+    - warp
 metadata:
   npm: "@automatelab/n8n-mcp"
   mcpName: io.github.ratamaha-git/n8n-mcp
