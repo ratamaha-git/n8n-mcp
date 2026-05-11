@@ -1,0 +1,89 @@
+{
+  "name": "AI agent with memory (webhook chat)",
+  "nodes": [
+    {
+      "id": "a1b2c3d4-0001-4ec6-9000-aaaaaaaaaaaa",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "ai-agent-chat-001",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "a1b2c3d4-0002-4ec6-9000-aaaaaaaaaaaa",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [460, 300],
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant. Answer the user's question concisely."
+        }
+      }
+    },
+    {
+      "id": "a1b2c3d4-0003-4ec6-9000-aaaaaaaaaaaa",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [340, 480],
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      }
+    },
+    {
+      "id": "a1b2c3d4-0004-4ec6-9000-aaaaaaaaaaaa",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [580, 480],
+      "parameters": {
+        "contextWindowLength": 10
+      }
+    },
+    {
+      "id": "a1b2c3d4-0005-4ec6-9000-aaaaaaaaaaaa",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [700, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"reply\": $json.output } }}",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [{ "node": "AI Agent", "type": "main", "index": 0 }]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [{ "node": "Respond to Webhook", "type": "main", "index": 0 }]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [{ "node": "AI Agent", "type": "ai_languageModel", "index": 0 }]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [{ "node": "AI Agent", "type": "ai_memory", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "pinData": {}
+}

@@ -41,6 +41,7 @@
     "node": ">=20"
   },
   "files": [
+    "action.yml",
     "dist/",
     "examples/",
     "references/",
@@ -54,6 +55,8 @@
     "access": "public"
   },
   "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
     "@modelcontextprotocol/sdk": "^1.0.4",
     "zod": "^3.23.8"
   },

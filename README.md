@@ -49,9 +49,24 @@ Plus: a paired [Agent Skill](./SKILL.md) that teaches the model when to use whic
 
 Requires Node 20 or later.
 
+### As a CLI tool
+
 ```bash
 npm install -g @automatelab/n8n-mcp
 ```
+
+### As a GitHub Action
+
+Use the n8n MCP GitHub Action to lint workflows, diagnose executions, and generate workflow JSON in your CI/CD pipeline:
+
+```yaml
+- uses: ratamaha-git/n8n-mcp@v1
+  with:
+    command: 'lint'
+    workflow-json: ${{ env.WORKFLOW_JSON }}
+```
+
+See [ACTION.md](./ACTION.md) and [GITHUB-ACTION-SETUP.md](./GITHUB-ACTION-SETUP.md) for examples and publication details.
 
 ## Configure your MCP host
 

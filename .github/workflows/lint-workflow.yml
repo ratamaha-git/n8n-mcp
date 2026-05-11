@@ -1,0 +1,30 @@
+name: Lint n8n Workflow
+
+on:
+  pull_request:
+    paths:
+      - '**/*.json'
+      - '.github/workflows/lint-workflow.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get changed JSON files
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            **/*.json
+
+      - name: Lint changed workflows
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: ./
+        with:
+          command: 'lint'
+          workflow-json: ${{ steps.changed-files.outputs.all_changed_files }}
+          output-format: 'markdown'
+          post-comment: 'true'

@@ -1,0 +1,52 @@
+name: 'n8n MCP Action'
+description: 'Run n8n MCP tools (lint, explain, generate) in GitHub Actions. Detects workflow issues, diagnoses failed executions, and generates workflow JSON.'
+author: 'AutomateLab'
+branding:
+  icon: 'check-square'
+  color: 'purple'
+
+inputs:
+  command:
+    description: 'MCP tool to run: lint | explain | generate | scaffold'
+    required: true
+  workflow-json:
+    description: 'Workflow JSON to lint, explain, or generate. Required for "lint" and "explain" commands.'
+    required: false
+  workflow-description:
+    description: 'Plain-English description of the workflow to generate. Required for "generate" command.'
+    required: false
+  execution-json:
+    description: 'Execution JSON from a failed n8n run. Required for "explain" command.'
+    required: false
+  node-description:
+    description: 'Description of a custom node to scaffold. Required for "scaffold" command.'
+    required: false
+  n8n-api-url:
+    description: 'n8n instance URL (e.g., https://your-n8n.example.com). Optional - omit for stateless tools.'
+    required: false
+  n8n-api-key:
+    description: 'n8n API key. Optional - only needed for live instance tools (list-workflows, get-workflow, etc.).'
+    required: false
+  output-format:
+    description: 'Output format: text | json | markdown (default: markdown)'
+    required: false
+    default: 'markdown'
+  post-comment:
+    description: 'Post results as a PR comment (true/false). Default: true for pull_request events.'
+    required: false
+    default: 'true'
+
+outputs:
+  result:
+    description: 'Tool output (text or JSON depending on command and output-format)'
+  status:
+    description: 'Status: success | error | no-issues-found'
+  issues-count:
+    description: 'For lint: number of issues found (errors + warnings)'
+  errors:
+    description: 'For lint: comma-separated error messages'
+
+runs:
+  using: 'node20'
+  main: 'dist/action.js'
+  post: 'dist/post.js'
